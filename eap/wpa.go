@@ -1,6 +1,11 @@
-// By Orange
+// Copyright 2019 Orange. All rights reserved.
+// A Generic WPA implementation in Go
 // The original Python implementation can be found here:
 //     https://github.com/nicholastoddsmith/PyCrack/blob/master/pywd.py
+//
+// Use of this source code is governed by a MIT license
+// that can be found in the LICENSE file in the root of the source
+// tree.
 
 package eap
 
