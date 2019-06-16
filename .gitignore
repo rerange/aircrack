@@ -1,4 +1,4 @@
-*_win32.exe
+*.exe
 *_darwin64
 data/test_decrypt.pcap
 reference

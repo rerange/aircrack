@@ -18,6 +18,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
@@ -230,20 +231,26 @@ func main() {
 	apMac := h2b(strings.Replace(handshake.ApMac.String(), ":", "", -1))
 	cliMac := h2b(strings.Replace(handshake.CliMac.String(), ":", "", -1))
 	scanner := bufio.NewScanner(wordFile)
+	var tested int
+	startTime := time.Now()
 	for scanner.Scan() {
 		word := strings.TrimSpace(scanner.Text())
 		mic, _, _, match := Verify(word, handshake.SSID, handshake.ANonce, handshake.SNonce, apMac, cliMac, handshake.Data, handshake.MIC, handshake.WPA)
 		if match {
-			fmt.Printf("\033[2K\r%s:%x:%x:%s", handshake.SSID, handshake.MIC[:4], mic[:4], word)
-			fmt.Printf("\n\nPassword Found: %s\n", word)
+			deltaTime := float64(time.Since(startTime).Nanoseconds()) / 1e9
+			fmt.Printf("\033[K\r%s:%x:%x:%s", handshake.SSID, handshake.MIC[:4], mic[:4], word)
+			fmt.Printf("\n\nPassword Found(%.2f k/s): %s\n", float64(tested)/deltaTime, word)
 			fmt.Printf("\tActual mic:  %x\n", mic)
 			fmt.Printf("\tDesired mic: %x\n\n", handshake.MIC)
 			return
 		} else {
-			fmt.Printf("\033[2K\r%s:%x:%x:%s", handshake.SSID, handshake.MIC[:4], mic[:4], word)
+			fmt.Printf("\033[K\r%s:%x:%x:%s", handshake.SSID, handshake.MIC[:4], mic[:4], word)
 		}
+		tested++
 	}
+	deltaTime := float64(time.Since(startTime).Nanoseconds()) / 1e9
 	fmt.Printf("\n\nPassword Not Found!\n")
+	fmt.Printf("Tested %d words in %.2fs(%.2fs k/s)\n", tested, deltaTime, float64(tested)/deltaTime)
 }
 
 func Verify(pwd, ssid string, aNonce, sNonce, apMac, cliMac, data, mic []byte, isWpa bool) ([]byte, []byte, []byte, bool) {

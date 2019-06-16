@@ -41,8 +41,6 @@ func main() {
 		fmt.Printf("actual mic: %x\n", mic1)
 		fmt.Printf("desired mic: %x\n", mic)
 	}
-	//fmt.Printf("%x\n", ptk)
-	//fmt.Printf("%x\n", pmk)
 }
 
 func Verify(pwd, ssid string, aNonce, sNonce, apMac, cliMac, data, mic []byte, isWpa bool) ([]byte, []byte, []byte, bool) {
