@@ -62,6 +62,7 @@ func main() {
 	var i = 0
 	var handshake = Handshake{}
 	for packet := range packetSource.Packets() {
+		i++
 		var apAddr net.HardwareAddr
 		var cliAddr net.HardwareAddr
 
@@ -180,11 +181,13 @@ func main() {
 				handshake = Handshake{}
 			}
 		}
-		i++
 	}
 	var j = 0
 	var handshakeId = make([]string, 0)
 	for k, v := range handshakes {
+		if !v.Valid {
+			continue
+		}
 		if j == 0 {
 			fmt.Printf("Handshake: \n")
 		}

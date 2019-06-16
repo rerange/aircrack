@@ -7,7 +7,7 @@ clean:
 	rm -f ${NAME}_linux64
 	rm -f ${NAME}_win32.exe
 run:
-	go run ${NAME}.go -f wifi.pcap -w wordlist.txt
+	go run ${NAME}.go -f data/wifi.pcap -w wordlist.txt
 test:
 	go run verify.go
 darwin:
